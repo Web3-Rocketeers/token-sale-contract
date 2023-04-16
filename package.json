@@ -1,0 +1,23 @@
+{
+  "name": "token-sale-contract",
+  "version": "1.0.0",
+  "description": "A smart contract for handling token sales",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "truffle compile",
+    "migrate": "truffle migrate"
+  },
+  "keywords": [
+    "smart-contract",
+    "token-sale",
+    "ethereum"
+  ],
+  "author": "Fonck",
+  "license": "ISC",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.8.3",
+    "dotenv": "^16.0.3",
+    "truffle": "^5.8.2"
+  }
+}

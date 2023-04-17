@@ -49,8 +49,9 @@
 require('dotenv').config();
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
-const mnemonic = process.env.MNEMONIC;
+const mnemonic = process.env.MNEMONIC_PHRASE;
 const apiKey = process.env.INFURA_API_KEY;
+const sepoliaTokenAddress = '0x11d41428173f7be020198788f0ed29818a4dac96';
 
 module.exports = {
   /**
@@ -109,7 +110,7 @@ module.exports = {
     },
     sepolia: {
       provider: () => new HDWalletProvider({
-        mnemonic: process.env.MNEMONIC,
+        mnemonic: process.env.MNEMONIC_PHRASE,
         providerOrUrl: `https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`
       }),
       network_id: 11155111,
@@ -121,7 +122,7 @@ module.exports = {
       provider: () =>
         new HDWalletProvider({
           mnemonic: {
-            phrase: mnemonic,
+            phrase: process.env.MNEMONIC_PHRASE,
           },
           providerOrUrl: `https://mainnet.infura.io/v3/${apiKey}`,
         }),

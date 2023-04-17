@@ -10,7 +10,7 @@ contract("TokenSale", function (accounts) {
   beforeEach(async function () {
     const network = await web3.eth.net.getNetworkType();
     const tokenABI = truffleConfig.getABI(network);
-    const deployedTokenAddress = /* Your deployed token address */;
+    const deployedTokenAddress = 0xcEAAc35a8992CA451a85A377C831eD9Bc45026e1;
 
     // Create a contract instance using the ABI and the token contract address
     token = new web3.eth.Contract(tokenABI, deployedTokenAddress);

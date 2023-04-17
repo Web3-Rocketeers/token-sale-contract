@@ -8,6 +8,8 @@ const apiKey = process.env.INFURA_API_KEY;
 const mainnetTokenABI = require("./build/contracts/ABITokenMainnet.json");
 const sepoliaTokenABI = require("./build/contracts/ABITokenSepolia.json");
 
+const sepoliaTokenAddress = "0x11d41428173f7be020198788f0ed29818a4dac96";
+
 module.exports = {
   networks: {
     development: {
@@ -40,6 +42,8 @@ module.exports = {
       skipDryRun: true,
     },
   },
+
+  sepoliaTokenAddress: sepoliaTokenAddress,
 
   mocha: {
   },

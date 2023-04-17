@@ -1,9 +1,0 @@
-const TokenSale = artifacts.require("TokenSale");
-const { sepoliaTokenAddress } = require("../truffle-config");
-
-module.exports = function (deployer, network, accounts) {
-  const tokenPrice = web3.utils.toWei("0.000005", "ether");
-
-  // Deploy the TokenSale contract with the sepoliaTokenAddress and tokenPrice
-  deployer.deploy(TokenSale, sepoliaTokenAddress, tokenPrice);
-};

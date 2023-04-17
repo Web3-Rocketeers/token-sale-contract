@@ -53,6 +53,23 @@ const mnemonic = process.env.MNEMONIC_PHRASE;
 const apiKey = process.env.INFURA_API_KEY;
 const sepoliaTokenAddress = '0x11d41428173f7be020198788f0ed29818a4dac96';
 
+// Import ABIs
+const mainnetTokenABI = require("../ABITokenMainnet.json");
+const sepoliaTokenABI = require("../ABITokenSepolia.json");
+
+// Use the appropriate ABI based on the network
+let tokenABI;
+if (network === 'mainnet') {
+  tokenABI = mainnetTokenABI;
+} else if (network === 'sepolia') {
+  tokenABI = sepoliaTokenABI;
+} else {
+  throw new Error('Unsupported network');
+}
+
+// Create a contract instance using the ABI and the token contract address
+const tokenContract = new web3.eth.Contract(tokenABI, tokenContractAddress);
+
 module.exports = {
   /**
    * Networks define how you connect to your ethereum client and let you set the

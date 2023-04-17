@@ -54,8 +54,8 @@ const apiKey = process.env.INFURA_API_KEY;
 const sepoliaTokenAddress = '0x11d41428173f7be020198788f0ed29818a4dac96';
 
 // Import ABIs
-const mainnetTokenABI = require("../ABITokenMainnet.json");
-const sepoliaTokenABI = require("../ABITokenSepolia.json");
+const mainnetTokenABI = require("./build/contracts/ABITokenMainnet.json");
+const sepoliaTokenABI = require("./build/contracts/ABITokenSepolia.json");
 
 // Use the appropriate ABI based on the network
 let tokenABI;

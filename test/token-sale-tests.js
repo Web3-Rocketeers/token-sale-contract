@@ -92,3 +92,4 @@ contract("TokenSale", function (accounts) {
   });
   
   // Add more test cases as needed
+});

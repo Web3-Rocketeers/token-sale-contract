@@ -41,5 +41,54 @@ contract("TokenSale", function (accounts) {
     assert.equal(buyerBalance.toString(), tokensToBuy.toString(), "Buyer has incorrect token balance after purchase");
   });
 
+  it("should not allow users to buy more tokens than available", async function () {
+    const tokensToBuy = web3.utils.toBN(2e18); // More than the tokens transferred to the contract
+    const tokenSaleRate = await tokenSale.rate();
+    const value = tokensToBuy.mul(tokenSaleRate);
+
+    // Attempt to buy tokens
+    await expectRevert(
+      tokenSale.buyTokens(tokensToBuy.toString(), { from: buyer, value: value.toString() }),
+      "Not enough tokens left for sale"
+    );
+  });
+
+  it("should allow only owner to end the sale", async function () {
+    await expectRevert(
+      tokenSale.endSale({ from: other }),
+      "Ownable: caller is not the owner"
+    );
+  });
+
+  it("should transfer remaining tokens and Ether to owner on endSale", async function () {
+    const initialOwnerBalance = await token.methods.balanceOf(deployer).call();
+    const initialContractBalance = await token.methods.balanceOf(tokenSale.address).call();
+
+    // End sale
+    await tokenSale.endSale({ from: deployer });
+
+    const finalOwnerBalance = await token.methods.balanceOf(deployer).call();
+    const finalContractBalance = await token.methods.balanceOf(tokenSale.address).call();
+
+    assert.equal(finalContractBalance, 0, "Contract should have no tokens left");
+    assert.equal(finalOwnerBalance - initialOwnerBalance, initialContractBalance, "Owner should have received the remaining tokens");
+  });
+
+  it("should allow only owner to set the price", async function () {
+    const newPrice = web3.utils.toWei("0.00001", "ether");
+  
+    // Attempt to set price from non-owner account
+    await expectRevert(
+      tokenSale.setPrice(newPrice, { from: other }),
+      "Ownable: caller is not the owner"
+    );
+  
+    // Set price from owner account
+    await tokenSale.setPrice(newPrice, { from: deployer });
+  
+    // Check that the price has been updated
+    const tokenSalePrice = await tokenSale.price();
+    assert.equal(tokenSalePrice.toString(), newPrice, "Price was not updated correctly");
+  });
+  
   // Add more test cases as needed
-});

@@ -92,7 +92,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -105,7 +106,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -118,7 +120,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -131,7 +134,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -150,7 +154,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -169,7 +174,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -189,7 +195,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -209,7 +216,8 @@
       "name": "buyTokens",
       "outputs": [],
       "stateMutability": "payable",
-      "type": "function"
+      "type": "function",
+      "payable": true
     },
     {
       "inputs": [],
@@ -222,7 +230,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -13295,12 +13304,13 @@
         }
       },
       "links": {},
-      "address": "0xD09fA2A08f21BE00B26fB7265876A5467D724951",
-      "transactionHash": "0x17d78ad9df959c4ea084b6a0a02c3694d9d9e68b64181319c787a68c00d7087d"
+      "address": "0xA96Ba85399c91c01411951e4a835eB38dd76680D",
+      "transactionHash": "0x6c46e54591c90747f84d3b743bd4d3bf89c57a6af1fd9c25c35f6979593e28c5"
     }
   },
   "schemaVersion": "3.4.13",
-  "updatedAt": "2023-06-13T16:53:45.474Z",
+  "updatedAt": "2023-06-13T16:56:01.714Z",
+  "networkType": "ethereum",
   "devdoc": {
     "events": {
       "Paused(address)": {

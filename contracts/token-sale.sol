@@ -1,60 +1,93 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
 
-contract TokenSale {
-    address public admin;
-    IERC20 public tokenContract;
-    uint256 public tokenPrice;
-    uint256 public tokensSold;
+contract TokenSale is Ownable, Pausable {
+    IERC20 public token;
+    uint256 public price;
+    bool public isTimeBased = false;
+    uint256[] public prices;
+    uint256[] public priceChangeTimestamps;
 
-    event Sell(address _buyer, uint256 _amount);
+    event Sell(address indexed _buyer, uint256 _amount);
 
-    constructor(IERC20 _tokenContract, uint256 _tokenPrice) {
-        admin = msg.sender;
-        tokenContract = _tokenContract;
-        tokenPrice = _tokenPrice;
+    constructor(IERC20 _token, uint256 _price) {
+        token = _token;
+        price = _price;
     }
 
-    function buyTokens(uint256 _numberOfTokens) public payable {
+    function buyTokens() external payable whenNotPaused {
+        uint256 amountToBuy;
+        if (isTimeBased) {
+            amountToBuy = msg.value / getCurrentPrice();
+        } else {
+            amountToBuy = msg.value / price;
+        }
+        uint256 contractBalance = token.balanceOf(address(this));
+
+        require(amountToBuy > 0, "You need to send some ether");
         require(
-            msg.value == multiply(_numberOfTokens, tokenPrice),
-            "Incorrect amount of ether sent"
-        );
-        require(
-            tokenContract.balanceOf(address(this)) >= _numberOfTokens,
-            "Not enough tokens available in the contract"
-        );
-        require(
-            tokenContract.transfer(msg.sender, _numberOfTokens),
-            "Token transfer failed"
+            amountToBuy <= contractBalance,
+            "Not enough tokens left for sale"
         );
 
-        tokensSold += _numberOfTokens;
+        token.transfer(msg.sender, amountToBuy);
 
-        emit Sell(msg.sender, _numberOfTokens);
+        emit Sell(msg.sender, amountToBuy);
     }
 
-    function endSale() public {
-        require(msg.sender == admin, "Only admin can end the sale");
-        require(
-            tokenContract.transfer(
-                admin,
-                tokenContract.balanceOf(address(this))
-            ),
-            "Unable to transfer tokens to admin"
-        );
-
-        // Just transfer the balance to the admin, but you can also implement a withdrawal pattern here
-        payable(admin).transfer(address(this).balance);
+    function getCurrentPrice() public view returns (uint256) {
+        if (!isTimeBased) {
+            return price;
+        }
+        for (uint i = priceChangeTimestamps.length; i > 0; i--) {
+            if (block.timestamp >= priceChangeTimestamps[i - 1]) {
+                return prices[i - 1];
+            }
+        }
+        revert("No price defined for current time");
     }
 
-    function multiply(uint x, uint y) internal pure returns (uint z) {
+    function setPrice(uint256 _price) external onlyOwner {
         require(
-            y == 0 || (z = x * y) / y == x,
-            "SafeMath: multiplication overflow"
+            !isTimeBased,
+            "Cannot manually set price during time-based phase"
         );
+        price = _price;
+    }
+
+    function switchToTimeBasedTiers(
+        uint256[] memory newPrices,
+        uint256[] memory timestamps
+    ) external onlyOwner {
+        require(
+            newPrices.length == timestamps.length,
+            "Arrays must be the same length"
+        );
+        prices = newPrices;
+        priceChangeTimestamps = timestamps;
+        isTimeBased = true;
+    }
+
+    function pause() external onlyOwner {
+        _pause();
+    }
+
+    function unpause() external onlyOwner {
+        _unpause();
+    }
+
+    function endSale() external onlyOwner {
+        // Send unsold tokens to the owner
+        require(
+            token.transfer(owner(), token.balanceOf(address(this))),
+            "Error transferring tokens to owner"
+        );
+
+        // Send Ether received during the sale to the owner
+        payable(owner()).transfer(address(this).balance);
     }
 }

@@ -1,3 +1,5 @@
+// token-sale-tests.js
+
 const { expect } = require("chai");
 const { BN, ether, expectEvent, expectRevert, constants } = require("@openzeppelin/test-helpers");
 const TokenSale = artifacts.require("TokenSale");
@@ -14,18 +16,22 @@ contract("TokenSale", function (accounts) {
 
     // Create a contract instance using the ABI and the token contract address
     token = new web3.eth.Contract(tokenABI, deployedTokenAddress);
+    console.log("Token contract instance created");
 
     // Deploy TokenSale contract
     tokenSale = await TokenSale.new(deployedTokenAddress);
+    console.log("TokenSale contract deployed");
 
     // Transfer some tokens to the TokenSale contract
     const tokensToTransfer = web3.utils.toBN(1e18);
     await token.methods.transfer(tokenSale.address, tokensToTransfer.toString()).send({ from: deployer });
+    console.log("Tokens transferred to TokenSale contract");
   });
 
   it("should correctly initialize the token sale contract", async function () {
     const tokenAddress = await tokenSale.tokenContract();
     assert.equal(tokenAddress, token.options.address, "TokenSale contract has incorrect token address");
+    console.log("TokenSale contract initialization checked");
   });
 
   it("should allow users to buy tokens", async function () {
@@ -35,10 +41,12 @@ contract("TokenSale", function (accounts) {
     
     // Buy tokens
     await tokenSale.buyTokens(tokensToBuy.toString(), { from: buyer, value: value.toString() });
+    console.log("Tokens bought");
 
     // Check buyer balance
     const buyerBalance = await token.methods.balanceOf(buyer).call();
     assert.equal(buyerBalance.toString(), tokensToBuy.toString(), "Buyer has incorrect token balance after purchase");
+    console.log("Buyer balance checked");
   });
 
   it("should not allow users to buy more tokens than available", async function () {

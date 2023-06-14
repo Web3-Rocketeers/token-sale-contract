@@ -9,7 +9,10 @@ contract("TokenSale", function ([deployer, buyer, other]) {
 
   beforeEach(async function () {
     // Deploy the token contract
-    token = await Token.new(/* parameters */);
+    const tokenABI = require('../build/contracts/ABITokenSepolia.json').abi;
+    const deployedTokenAddress = "<Sepolia token address>";
+    token = new web3.eth.Contract(tokenABI, deployedTokenAddress);
+    
 
     // Mint some tokens to the deployer
     await token.mint(deployer, ether("1000"));

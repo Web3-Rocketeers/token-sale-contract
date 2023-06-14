@@ -1,7 +1,6 @@
 const { expect } = require("chai");
 const { BN, ether, expectEvent, expectRevert, constants } = require("@openzeppelin/test-helpers");
 const TokenSale = artifacts.require("TokenSale");
-const Token = artifacts.require("Token"); // Replace "Token" with the name of your token contract
 
 contract("TokenSale", function ([deployer, buyer, other]) {
   let tokenSale;
@@ -10,9 +9,8 @@ contract("TokenSale", function ([deployer, buyer, other]) {
   beforeEach(async function () {
     // Deploy the token contract
     const tokenABI = require('../build/contracts/ABITokenSepolia.json').abi;
-    const deployedTokenAddress = "<Sepolia token address>";
+    const deployedTokenAddress = "0x11d41428173f7bE020198788f0ed29818a4daC96";
     token = new web3.eth.Contract(tokenABI, deployedTokenAddress);
-    
 
     // Mint some tokens to the deployer
     await token.mint(deployer, ether("1000"));

@@ -7,21 +7,20 @@ contract("TokenSale", function ([deployer, buyer, other]) {
   let token;
 
   beforeEach(async function () {
-    // Deploy the token contract
-    const tokenABI = require('../build/contracts/ABITokenSepolia.json').abi;
-    const deployedTokenAddress = "0x11d41428173f7bE020198788f0ed29818a4daC96";
-    token = new web3.eth.Contract(tokenABI, deployedTokenAddress);
-
+    // Get the token contract
+    const Token = artifacts.require('ABITokenSepolia');
+    token = await Token.at('0x11d41428173f7bE020198788f0ed29818a4daC96');
+  
     // Mint some tokens to the deployer
     await token.mint(deployer, ether("1000"));
-
+  
     // Deploy the TokenSale contract
     tokenSale = await TokenSale.new(token.address, ether("1"), { from: deployer });
-
+  
     // Transfer some tokens to the TokenSale contract
     await token.transfer(tokenSale.address, ether("500"), { from: deployer });
   });
-
+  
   it("should correctly initialize the token sale contract", async function () {
     expect(await tokenSale.token()).to.equal(token.address);
     expect(await tokenSale.price()).to.be.bignumber.equal(ether("1"));

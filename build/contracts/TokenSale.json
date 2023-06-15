@@ -13300,7 +13300,7 @@
     }
   },
   "schemaVersion": "3.4.13",
-  "updatedAt": "2023-06-14T23:39:33.865Z",
+  "updatedAt": "2023-06-15T20:24:25.925Z",
   "devdoc": {
     "events": {
       "Paused(address)": {

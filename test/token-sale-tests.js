@@ -1,6 +1,7 @@
 const { expect } = require("chai");
 const { BN, ether, expectEvent, expectRevert, constants } = require("@openzeppelin/test-helpers");
 const TokenSale = artifacts.require("TokenSale");
+const Token = artifacts.require('Rockets');
 
 contract("TokenSale", function ([deployer, buyer, other]) {
   let tokenSale;
@@ -8,9 +9,9 @@ contract("TokenSale", function ([deployer, buyer, other]) {
 
   beforeEach(async function () {
     // Get the token contract
-    const Token = artifacts.require('Rockets');
+
     token = await Token.at('0x11d41428173f7bE020198788f0ed29818a4daC96');
-  
+  console.log(token);
     // Mint some tokens to the deployer
     await token.mint(deployer, ether("1000"));
   

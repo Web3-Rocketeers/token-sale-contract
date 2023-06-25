@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
@@ -8,10 +7,10 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 contract TokenSale is Ownable, Pausable {
     IERC20 public token;
     uint256 public price;
+    uint256 private constant ONE_TOKEN = 10 ** 18; //Tokens are typically divisible to 18 decimal places
     bool public isTimeBased = false;
     uint256[] public prices;
     uint256[] public priceChangeTimestamps;
-
     event Sell(address indexed _buyer, uint256 _amount);
 
     constructor(IERC20 _token, uint256 _price) {
@@ -22,9 +21,9 @@ contract TokenSale is Ownable, Pausable {
     function buyTokens() external payable whenNotPaused {
         uint256 amountToBuy;
         if (isTimeBased) {
-            amountToBuy = msg.value / getCurrentPrice();
+            amountToBuy = (msg.value * getCurrentPrice()) / ONE_TOKEN;
         } else {
-            amountToBuy = msg.value / price;
+            amountToBuy = (msg.value * price) / ONE_TOKEN;
         }
         uint256 contractBalance = token.balanceOf(address(this));
 
@@ -33,9 +32,7 @@ contract TokenSale is Ownable, Pausable {
             amountToBuy <= contractBalance,
             "Not enough tokens left for sale"
         );
-
         token.transfer(msg.sender, amountToBuy);
-
         emit Sell(msg.sender, amountToBuy);
     }
 
@@ -86,7 +83,6 @@ contract TokenSale is Ownable, Pausable {
             token.transfer(owner(), token.balanceOf(address(this))),
             "Error transferring tokens to owner"
         );
-
         // Send Ether received during the sale to the owner
         payable(owner()).transfer(address(this).balance);
     }

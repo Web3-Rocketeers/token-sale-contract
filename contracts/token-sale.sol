@@ -8,6 +8,7 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 contract TokenSale is Ownable, Pausable {
     IERC20 public token;
     uint256 public price;
+    uint256 private const ONE_TOKEN = 10 ** 18; //Tokens are typically divisible to 18 decimal places
     bool public isTimeBased = false;
     uint256[] public prices;
     uint256[] public priceChangeTimestamps;
@@ -22,9 +23,9 @@ contract TokenSale is Ownable, Pausable {
     function buyTokens() external payable whenNotPaused {
         uint256 amountToBuy;
         if (isTimeBased) {
-            amountToBuy = msg.value / getCurrentPrice();
+            amountToBuy = msg.value * ONE_TOKEN / getCurrentPrice();
         } else {
-            amountToBuy = msg.value / price;
+            amountToBuy = msg.value * ONE_TOKEN / price;
         }
         uint256 contractBalance = token.balanceOf(address(this));
 

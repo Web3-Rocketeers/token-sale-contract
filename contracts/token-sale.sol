@@ -23,9 +23,9 @@ contract TokenSale is Ownable, Pausable {
     function buyTokens() external payable whenNotPaused {
         uint256 amountToBuy;
         if (isTimeBased) {
-            amountToBuy = msg.value * getCurrentPrice() / ONE_TOKEN;
+            amountToBuy = msg.value * ONE_TOKEN / getCurrentPrice();
         } else {
-            amountToBuy = msg.value * price / ONE_TOKEN;
+            amountToBuy = msg.value * ONE_TOKEN / price;
         }
         uint256 contractBalance = token.balanceOf(address(this));
 

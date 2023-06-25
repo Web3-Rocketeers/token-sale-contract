@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 contract TokenSale is Ownable, Pausable {
     IERC20 public token;
     uint256 public price;
-    uint256 private const ONE_TOKEN = 10 ** 18; //Tokens are typically divisible to 18 decimal places
+    uint256 private constant ONE_TOKEN = 10 ** 18; //Tokens are typically divisible to 18 decimal places
     bool public isTimeBased = false;
     uint256[] public prices;
     uint256[] public priceChangeTimestamps;
